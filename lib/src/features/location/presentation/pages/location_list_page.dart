@@ -5,6 +5,7 @@ import 'package:map_test/src/features/location/data/datasources/remote_datasourc
 import 'package:map_test/src/features/location/presentation/bloc/building_bloc.dart';
 import 'package:map_test/src/features/location/presentation/pages/location_details_page.dart';
 import 'package:map_test/src/features/location/presentation/widgets/building_item.dart';
+import 'package:map_test/src/features/map/presentation/pages/global_map_page.dart';
 
 class LocationListPage extends StatefulWidget {
   const LocationListPage({super.key});
@@ -66,6 +67,30 @@ class _LocationListPageState extends State<LocationListPage> {
                         ),
                       ),
                       error: (msg) => const Text('Возникла ошибка'),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10),
+                BlocBuilder<BuildingBloc, BuildingState>(
+                  builder: (context, state) {
+                    return state.when(
+                      initial: () => const Center(child: Text('')),
+                      loading: () => const Center(
+                          child: CircularProgressIndicator(
+                        color: Color.fromARGB(255, 0, 59, 108),
+                      )),
+                      loaded: (data) => TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        GlobalMapPage(buildings: data)));
+                          },
+                          child: const Text('Map button')),
+                      error: (msg) => Center(
+                        child: Text('Возникла Ошибка, попробуйте позже: $msg'),
+                      ),
                     );
                   },
                 ),
